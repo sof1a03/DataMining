@@ -1,0 +1,50 @@
+install.packages("tm")
+install.packages("randomForest")
+install.packages("entropy")
+install.packages("randomForest")
+install.packages("rpart")
+install.packages("rpart.plot")
+install.packages("cv.glmnet")
+  
+library(tm)
+library(entropy)
+library(SnowballC)
+library(rpart)
+library(rpart.plot)
+library(randomForest)
+
+training.corpusdec <- c("C:/Users/ponti/Desktop/polimi/UU courses/data mining/assignment 2/op_spam_v1.4/negative_polarity/deceptive_from_MTurk/fold1"
+               ,"C:/Users/ponti/Desktop/polimi/UU courses/data mining/assignment 2/op_spam_v1.4/negative_polarity/deceptive_from_MTurk/fold2"
+               ,"C:/Users/ponti/Desktop/polimi/UU courses/data mining/assignment 2/op_spam_v1.4/negative_polarity/deceptive_from_MTurk/fold3"
+               ,"C:/Users/ponti/Desktop/polimi/UU courses/data mining/assignment 2/op_spam_v1.4/negative_polarity/deceptive_from_MTurk/fold4")
+
+training.corpustrue<- c("C:/Users/ponti/Desktop/polimi/UU courses/data mining/assignment 2/op_spam_v1.4/negative_polarity/truthful_from_Web/fold1"
+               ,"C:/Users/ponti/Desktop/polimi/UU courses/data mining/assignment 2/op_spam_v1.4/negative_polarity/truthful_from_Web/fold2"
+               ,"C:/Users/ponti/Desktop/polimi/UU courses/data mining/assignment 2/op_spam_v1.4/negative_polarity/truthful_from_Web/fold3"
+               ,"C:/Users/ponti/Desktop/polimi/UU courses/data mining/assignment 2/op_spam_v1.4/negative_polarity/truthful_from_Web/fold4")
+
+test.corpusdec <- "C:/Users/ponti/Desktop/polimi/UU courses/data mining/assignment 2/op_spam_v1.4/negative_polarity/deceptive_from_MTurk/fold5"
+test.corpustrue <- "C:/Users/ponti/Desktop/polimi/UU courses/data mining/assignment 2/op_spam_v1.4/negative_polarity/truthful_from_Web/fold5"
+Naive Bayes with top 50
+         test.labels
+predictions  0  1
+          0 63 20
+          1 17 60
+
+classification tree with no cross validation
+                test.labels
+reviews.rpart.pred  0  1
+                 0 53 25
+                 1 27 55
+
+
+classifier <- randomForest(x = training.dtm[-318],
+                             y = training.dtm$label,
+                             ntree = 1000, type = "classification", err.rate = TRUE)
+  error_rates <- classifier$err.rate[,1]
+  plot(classifier$err.rate[,1])
+  error_rates <- cbind(error_rates, c(1:1000))
+  optimal_ntree <- error_rates[which.min(error_rates[,1]), 2]
+  print(optimal_ntree)
+
+  print(classifier)

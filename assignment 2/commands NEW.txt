@@ -1,0 +1,12 @@
+training.corpus.dec <- c("C:/Users/ponti/Desktop/polimi/UU courses/data mining/assignment 2/op_spam_v1.4/negative_polarity/deceptive_from_MTurk/fold1"
+               ,"C:/Users/ponti/Desktop/polimi/UU courses/data mining/assignment 2/op_spam_v1.4/negative_polarity/deceptive_from_MTurk/fold2"
+               ,"C:/Users/ponti/Desktop/polimi/UU courses/data mining/assignment 2/op_spam_v1.4/negative_polarity/deceptive_from_MTurk/fold3"
+               ,"C:/Users/ponti/Desktop/polimi/UU courses/data mining/assignment 2/op_spam_v1.4/negative_polarity/deceptive_from_MTurk/fold4")
+
+training.corpus.true<- c("C:/Users/ponti/Desktop/polimi/UU courses/data mining/assignment 2/op_spam_v1.4/negative_polarity/truthful_from_Web/fold1"
+               ,"C:/Users/ponti/Desktop/polimi/UU courses/data mining/assignment 2/op_spam_v1.4/negative_polarity/truthful_from_Web/fold2"
+               ,"C:/Users/ponti/Desktop/polimi/UU courses/data mining/assignment 2/op_spam_v1.4/negative_polarity/truthful_from_Web/fold3"
+               ,"C:/Users/ponti/Desktop/polimi/UU courses/data mining/assignment 2/op_spam_v1.4/negative_polarity/truthful_from_Web/fold4")
+
+testing.corpus.dec <- "C:/Users/ponti/Desktop/polimi/UU courses/data mining/assignment 2/op_spam_v1.4/negative_polarity/deceptive_from_MTurk/fold5"
+testing.corpus.true <- "C:/Users/ponti/Desktop/polimi/UU courses/data mining/assignment 2/op_spam_v1.4/negative_polarity/truthful_from_Web/fold5"
