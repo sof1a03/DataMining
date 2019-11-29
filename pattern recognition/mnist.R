@@ -10,6 +10,9 @@ library(dplyr)
 theme_set(theme_pubr())
 install.packages("nnet")
 library(nnet)
+install.packages("raster")
+library(raster)
+install.packages()
 
 #-----------------set up code( please change the repository name)----------------------#
 mnist.dat <- read.csv("C:/Users/ponti/Documents/GitHub/DataMining/pattern recognition/mnist.csv")
@@ -49,14 +52,16 @@ summary <- cbind(min_pixel, max_pixel, avg_pixel, colsums)
 summary <- as.data.frame(summary)
 useless.pixels <- summary[summary$min_pixel == summary$max_pixel, ]
 useless.pixels.name <- row.names(useless.pixels)
+#-----------------analysis of the black points----------------------#
+mnist.dat$num.black <- apply(mnist.dat[,-1], 1, function( digit){
+  digit <- unlist(digit)
+  digit <- as.vector(digit)
+  return (length(digit[digit > 100]))
+} )
+
 
 #-----------------how much ink ("density")----------------------#
 mnist.dat$density <- apply(mnist.dat[,-1], 1, sum)
-vector = for (label in c(0:9)){
-  mnist.dat.current.class <- mnist.dat[mnist.dat$label == label, ]
-  return (mean(mnist.dat.current.class$density))
-}
-print(vector)
 density.mean <- aggregate(mnist.dat$density,by=list(mnist.dat$label),FUN=mean)
 colnames(density.mean) <- c("label", "mean")
 print(density.mean)
@@ -77,12 +82,41 @@ multinom.accuracy <- sum(diag(conf.mat))/sum(conf.mat)
 print (multinom.conf.mat)
 print(multinom.accuracy)
 
-#-----------------new feature multinomial model----------------------#
-for (label in c(0:9)){
+#-----------------new feature multinomial model ( distance of the black points)----------------------#
+mmnist.dat$mean.distance <- apply(mnist.dat[,-1],1, function(current.example){
+  current.example <- unlist(current.example)
+  current.example <- as.vector(current.example)
+  index.row <- lapply(c(0:27), function(row){
+    rep(row, 28)
+  })
+  index.row <- unlist(index.row, recursive = FALSE)
+  index.column <- lapply(c(0:27), function(column){
+    c(0:27)
+  })
+  index.column <- unlist(index.column, recursive = FALSE)
+  current.example.with.indexes <- cbind(current.example, index.row, index.column)
+  current.example.points <- current.example.with.indexes[current.example.with.indexes[,1] > 100, ]
+  mean.row <- mean (current.example.points[,2])
+  mean.column <- mean (current.example.points[,3])
+  point.distances <- lapply(c(1:nrow(current.example.points)), function(point){
+    #to check
+    pointDistance(current.example.points[point,-1], c(mean.row, mean.column), lonlat = FALSE)
+  })
+  
+  point.distances <- unlist (point.distances, recursive = FALSE)
+  return (mean(point.distances))
+})
+  
+
+  
+
+
+mnist.dat <- 
+row_counter = 0
+column_counter = 0
+for ( counter in c(0:783)){
   
 }
-
-
 
 
 #-----------2nd part------------------
