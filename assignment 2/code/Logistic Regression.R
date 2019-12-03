@@ -14,7 +14,7 @@ logistic.function <- function (training.corpus.dec, training.corpus.true, testin
                               family="binomial",type.measure="class")
   print(coef(reviews.glmnet,s="lambda.1se"))
   reviews.logreg.pred <- predict(reviews.glmnet,
-                                 newx=test.dtm,s="lambda.1se",type="class")
+                                 newx=test.dtm,s="lambda.1se",type="class") #this code is wrong
   table(reviews.logreg.pred,test.labels)
 }
 

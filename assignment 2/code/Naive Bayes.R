@@ -14,6 +14,8 @@ naive.bayes.function <- function (training.corpus.dec, training.corpus.true, tes
   training.dtm.bigrams <- DocumentTermMatrix(training.dtm,control = list(tokenize = BigramTokenizer))
   training.dtm.bigrams <- removeSparseTerms(training.dtm.bigrams,0.95)
   training.dtm.bigrams = as.matrix(training.dtm.bigrams)
+  
+  #print
   print(dim(training.dtm.bigrams))
   print(dim(training.dtm.unigrams))
   print(colnames(training.dtm.bigrams))
@@ -22,19 +24,20 @@ naive.bayes.function <- function (training.corpus.dec, training.corpus.true, tes
   training.labels <- c(rep(0,320),rep(1,320))
   training.dtm <- cbind(training.dtm.unigrams, training.dtm.bigrams)
   print(dim(training.dtm))
+  
   #test set
   test.dtm <- cleaning.function (testing.corpus.dec,testing.corpus.true)
   test.dtm <- DocumentTermMatrix(test.dtm,list(dictionary=dimnames(training.dtm)[[2]]))
   test.dtm = as.matrix(test.dtm)
   test.labels <- c(rep(0,80),rep(1,80))
   
-  #feature selection
+  #feature selection ( with mutual information)
   training.dtm.mi <- apply(training.dtm,2,function(x,y){
                       mi.plugin(table(x,y)/length(y))},training.labels)
   training.dtm.mi.order <- order(training.dtm.mi,decreasing = T)
 
   #predicting
-  model <- train.mnb(training.dtm[, ], training.labels)
+  model <- train.mnb(training.dtm[, ], training.labels) #can plug in the best features
   predictions <- predict.mnb(model, test.dtm[, ])
   table (predictions,test.labels)
   
