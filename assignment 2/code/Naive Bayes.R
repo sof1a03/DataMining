@@ -1,4 +1,6 @@
+#--------------------------libraries---------------------#
 library(entropy)
+
 naive.bayes.function <- function (training.corpus.dec, training.corpus.true, testing.corpus.dec, testing.corpus.true){
   #training set
   training.dtm <- cleaning.function(training.corpus.dec,training.corpus.true)

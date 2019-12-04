@@ -53,21 +53,34 @@ ggpie(frequency.dataframe, x = "prop", label = "prop",
 pixel.minValue <- apply(mnist.dat[,-1], 2, min) #2 means by column
 pixel.maxValue <- apply(mnist.dat[,-1], 2, max) #1 means by row
 pixel.avgValue <- apply(mnist.dat[,-1], 2, mean)
-pixel.sumValues <- colSums(mnist.dat[,-1])
-summary <- cbind(pixel.minValue, pixel.maxValue, pixel.avgValue, pixel.sumValues)
+
+pixel.nwhite <- apply(mnist.dat[,-1], 2, function(pixel){
+  return (length(pixel[pixel ==0]))
+})
+pixel.nblack <- apply(mnist.dat[,-1], 2, function(pixel){
+  return (length(pixel[pixel ==255]))
+})
+
+mean.minValue <- mean(pixel.minValue)
+mean.maxValue <- mean( pixel.maxValue)
+mean.avgValue <- mean(pixel.avgValue)
+mean.nwhite <- mean(pixel.nwhite)
+mean.nblack <- mean(pixel.nblack)
+
+summary <- cbind(pixel.minValue, pixel.maxValue, pixel.avgValue, pixel.nwhite, pixel.nblack)
 summary <- as.data.frame(summary)
 useless.pixels <- summary[summary$pixel.minValue == summary$pixel.maxValue, ]
 useless.pixels.name <- row.names(useless.pixels)
-
-#-----------------analysis of the black points----------------------#
-mnist.dat$blacks <- apply(mnist.dat[,-1], 1, function( sample){
-  sample <- unlist(sample)
-  sample <- as.vector(sample)
+bottom.pixels <- summary[summary$pixel.minValue == 0, ]
+top.pixels <- summary[summary$pixel.maxValue == 255, ]
+num.bottom.pix <- nrow(bottom.pixels)
+num.top.pix <- nrow(top.pixels)
+#-----------------analysis of the dark points----------------------#
+mnist.dat$darks <- apply(mnist.dat[,c(2:785)], 1, function( sample){
   return (length(sample[sample > 128]))
 } )
 blacks.mean <- aggregate(mnist.dat$blacks,by=list(mnist.dat$label),FUN=mean)
 colnames(blacks.mean) <- c("label", "mean")
-print(blacks.mean)
 ggplot(data=blacks.mean, aes(x=label,y=mean))+geom_bar(stat="identity") #Depicting average number of black points.
 imageShow(matrix(as.numeric(mnist.dat[380,-c(1,786)]),nrow=28,ncol=28,byrow=T)) #image with no filter
 #verifying the filter
@@ -82,7 +95,7 @@ sample.image <- sapply(sample.image, function(pixel){
 imageShow(matrix(sample.image,nrow=28,ncol=28,byrow=T)) #image with no filter
 
 #-----------------how much ink ("density") ( mean and standard deviation)----------------------#
-mnist.dat$density <- apply(mnist.dat[,-1], 1, sum)
+mnist.dat$density <- apply(mnist.dat[,c(2:785)], 1, sum)
 density.mean <- aggregate(mnist.dat$density,by=list(mnist.dat$label),FUN=mean)
 colnames(density.mean) <- c("label", "mean")
 print(density.mean)
@@ -93,19 +106,19 @@ colnames(density.sd) <- c("label", "sd")
 ggplot(data=density.sd, aes(x=label,y=sd))+geom_bar(stat="identity") #Depicting standard deviation.  
 
 #-----------------simple multinomial model ("density")----------------------#
-mnist.dat$density <- scale(mnist.dat$density)
-data.training <- mnist.dat
-data.test <- mnist.dat
-multinom.model<-multinom(label~density,data = data.training, maxit = 1000)
+mnist.dat$density <- as.vector(scale(mnist.dat$density))
+input <- as.data.frame(mnist.dat$density, row.names = NULL, optional = TRUE)
+colnames(input) <- "density"
+multinom.model<-multinom(label~density,data = mnist.dat, maxit = 1000)
 summary(multinom.model)
-multinom.pred <- predict(multinom.model, data.training[, -1], type = "class")
+multinom.pred <- predict(multinom.model, input, type = "class")
 multinom.conf.mat <- table(multinom.pred,mnist.dat$label) #confusion matrix
 multinom.accuracy <- sum(diag(multinom.conf.mat))/sum(multinom.conf.mat)
 print (multinom.conf.mat)
 print(multinom.accuracy)
 
 #-----------------new feature multinomial model ( distance of the dark points)----------------------#
-mnist.dat$mean.distance <- apply(mnist.dat[,-1],1, function(current.example){
+mnist.dat$mean.distance <- apply(mnist.dat[,c(2:785)],1, function(current.example){
   current.example <- unlist(current.example)
   current.example <- as.vector(current.example)
   index.row <- lapply(c(0:27), function(row){
@@ -118,8 +131,8 @@ mnist.dat$mean.distance <- apply(mnist.dat[,-1],1, function(current.example){
   index.column <- unlist(index.column, recursive = FALSE)
   current.example.with.indexes <- cbind(current.example, index.row, index.column)
   current.example.points <- current.example.with.indexes[current.example.with.indexes[,1] > 128, ]
-  mean.row <- mean(current.example.points[,2])
-  mean.column <- mean(current.example.points,3)
+  mean.row <- current.example.points[1,2]
+  mean.column <- current.example.points[1,3]
   point.distances <- lapply(c(1:nrow(current.example.points)), function(point){
     example <- current.example.points[point,]
   return ( pointDistance(current.example.points[point,-1], cbind(mean.row,mean.column), lonlat = FALSE))
@@ -127,6 +140,7 @@ mnist.dat$mean.distance <- apply(mnist.dat[,-1],1, function(current.example){
   point.distances <- unlist (point.distances, recursive = FALSE)
   return (mean(point.distances))
 })
+#average value
 mean.distance.mean <- aggregate(mnist.dat$mean.distance,by=list(mnist.dat$label),FUN=mean)
 colnames(mean.distance.mean) <- c("label", "mean")
 print(mean.distance.mean)
@@ -136,15 +150,25 @@ mean.distance.sd <- aggregate(mnist.dat$mean.distance,by=list(mnist.dat$label),F
 colnames(mean.distance.sd) <- c("label", "sd")
 ggplot(data=mean.distance.sd, aes(x=label,y=sd))+geom_bar(stat="identity") #Depicting standard deviation.  
 #-----------------simple multinomial model ( with the second feature)----------------------#  
-mnist.dat$mean.distance <- scale(mnist.dat$mean.distance)
-data.training <- mnist.dat
-data.test <- mnist.dat
-multinom.model<-multinom(label~mean.distance,data = data.training, maxit = 1000)
-multinom.pred <- predict(multinom.model, data.training[, -1], type = "class")
+mnist.dat$mean.distance <- as.vector(scale(mnist.dat$mean.distance))
+input <- as.data.frame(mnist.dat$mean.distance, row.names = NULL, optional = TRUE)
+colnames(input) <- "mean.distance"
+multinom.model<-multinom(label~mean.distance,data = mnist.dat, maxit = 1000)
 summary(multinom.model)
-multinom.conf.mat <- table(multinom.pred,mnist.dat$label) #confusion matrix
+multinom.pred <- predict(multinom.model, input, type = "class")
+multinom.conf.mat <- table(multinom.pred,data.mnist$label) #confusion matrix
 multinom.accuracy <- sum(diag(multinom.conf.mat))/sum(multinom.conf.mat)
 print (multinom.conf.mat)
 print(multinom.accuracy)
+#-----------------multinomial model with both features----------------------#  
+data.training <- mnist.dat[, cbind("label", "mean.distance", "density")]
+multinom.model<-multinom(label~.,data = data.training, maxit = 1000)
+summary(multinom.model)
+multinom.pred <- predict(multinom.model, data.training[,-1], type = "class")
+multinom.conf.mat <- table(multinom.pred,data.training$label) #confusion matrix
+multinom.accuracy <- sum(diag(multinom.conf.mat))/sum(multinom.conf.mat)
+print (multinom.conf.mat)
+print(multinom.accuracy)
+
 
 
