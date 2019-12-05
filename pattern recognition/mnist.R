@@ -60,13 +60,11 @@ pixel.nwhite <- apply(mnist.dat[,-1], 2, function(pixel){
 pixel.nblack <- apply(mnist.dat[,-1], 2, function(pixel){
   return (length(pixel[pixel ==255]))
 })
-
 mean.minValue <- mean(pixel.minValue)
 mean.maxValue <- mean( pixel.maxValue)
 mean.avgValue <- mean(pixel.avgValue)
 mean.nwhite <- mean(pixel.nwhite)
 mean.nblack <- mean(pixel.nblack)
-
 summary <- cbind(pixel.minValue, pixel.maxValue, pixel.avgValue, pixel.nwhite, pixel.nblack)
 summary <- as.data.frame(summary)
 useless.pixels <- summary[summary$pixel.minValue == summary$pixel.maxValue, ]
@@ -135,7 +133,7 @@ mnist.dat$mean.distance <- apply(mnist.dat[,c(2:785)],1, function(current.exampl
   mean.column <- current.example.points[1,3]
   point.distances <- lapply(c(1:nrow(current.example.points)), function(point){
     example <- current.example.points[point,]
-  return ( pointDistance(current.example.points[point,-1], cbind(mean.row,mean.column), lonlat = FALSE))
+  return ( ((pointDistance(current.example.points[point,-1], cbind(mean.row,mean.column), lonlat = FALSE))^2))
   })
   point.distances <- unlist (point.distances, recursive = FALSE)
   return (mean(point.distances))
@@ -156,7 +154,7 @@ colnames(input) <- "mean.distance"
 multinom.model<-multinom(label~mean.distance,data = mnist.dat, maxit = 1000)
 summary(multinom.model)
 multinom.pred <- predict(multinom.model, input, type = "class")
-multinom.conf.mat <- table(multinom.pred,data.mnist$label) #confusion matrix
+multinom.conf.mat <- table(multinom.pred,mnist.dat$label) #confusion matrix
 multinom.accuracy <- sum(diag(multinom.conf.mat))/sum(multinom.conf.mat)
 print (multinom.conf.mat)
 print(multinom.accuracy)
