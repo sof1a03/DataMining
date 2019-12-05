@@ -8,6 +8,7 @@ install.packages("raster")
 install.packages("e1071")
 install.packages("caTools")
 install.packages("glmnet")
+install.packages("caret")
 #-----------------libraries----------------------#
 library( OpenImageR)
 library(ggplot2)
@@ -19,6 +20,7 @@ library(raster)
 library(e1071)
 library(caTools)
 library(glmnet)
+library(caret)
 
 #----------------set up code( please change the repository name)----------------------#
 mnist.dat <- read.csv("C:/Users/ponti/Documents/GitHub/DataMining/pattern recognition/mnist.csv")
