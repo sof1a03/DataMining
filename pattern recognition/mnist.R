@@ -102,6 +102,7 @@ print(density.mean)
 ggplot(data=density.mean, aes(x=label,y=mean))+geom_bar(stat="identity") #Depicting average intensity. 
 #standard deviation
 density.sd <- aggregate(mnist.dat$density,by=list(mnist.dat$label),FUN=sd)
+print(density.sd)
 colnames(density.sd) <- c("label", "sd")
 ggplot(data=density.sd, aes(x=label,y=sd))+geom_bar(stat="identity") #Depicting standard deviation.  
 
@@ -148,6 +149,7 @@ ggplot(mean.distance.mean, aes(x=label,y=mean))+geom_bar(stat="identity") #Depic
 #standard deviation
 mean.distance.sd <- aggregate(mnist.dat$mean.distance,by=list(mnist.dat$label),FUN=sd)
 colnames(mean.distance.sd) <- c("label", "sd")
+print(mean.distance.sd)
 ggplot(data=mean.distance.sd, aes(x=label,y=sd))+geom_bar(stat="identity") #Depicting standard deviation.  
 #-----------------simple multinomial model ( with the second feature)----------------------#  
 mnist.dat$mean.distance <- as.vector(scale(mnist.dat$mean.distance))
