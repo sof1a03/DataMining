@@ -20,6 +20,7 @@ naive.bayes.function <- function (training.corpus.dec, training.corpus.true, tes
   training.labels <- c(rep(0,320),rep(1,320))
   training.dtm <- cbind(training.dtm.unigrams, training.dtm.bigrams)
   
+  ###################################################################################
   #test set
   test.dtm <- cleaning.function (testing.corpus.dec,testing.corpus.true)
   
@@ -34,12 +35,17 @@ naive.bayes.function <- function (training.corpus.dec, training.corpus.true, tes
   #test set with both unigrams and bigrams
   test.labels <- c(rep(0,80),rep(1,80))
   test.dtm <- cbind(test.dtm.unigrams, test.dtm.bigrams)
+  ########################################################################################
+  #feature selection (with mutual information, only for unigrams)
+  training.dtm.unigrams.mi <- apply(training.dtm.unigrams,2,function(x,y){
+    mi.plugin(table(x,y)/length(y))},training.labels)
+  training.dtm.unigrams.mi.order <- order(training.dtm.unigrams.mi,decreasing = T)
   
   #feature selection ( with mutual information)
   training.dtm.mi <- apply(training.dtm,2,function(x,y){
                       mi.plugin(table(x,y)/length(y))},training.labels)
   training.dtm.mi.order <- order(training.dtm.mi,decreasing = T)
-  
+  ###########################################################################################
   #print
   print(dim(training.dtm.bigrams))
   print(dim(training.dtm.unigrams))
@@ -47,21 +53,27 @@ naive.bayes.function <- function (training.corpus.dec, training.corpus.true, tes
   print(dim(training.dtm)) ## just to check
   print(training.dtm.mi[training.dtm.mi.order[1:10]])
   
-  #first model (only unigrams)
-  model.unigrams <- train.mnb(training.dtm.unigrams, training.labels) 
-  predictions.unigrams <- predict.mnb(model.unigrams, test.dtm.unigrams)
-  print(table (predictions.unigrams,test.labels))
+  #first model ( with feature selection according to mutual information)(only unigrams)
+  accuracies.unigrams.mi.models <- sapply(c(2:307), function (num.features){
+    model.mi <-train.mnb(training.dtm.unigrams[,training.dtm.unigrams.mi.order[1:num.features] ], training.labels) 
+    predictions.mi <- predict.mnb(model.mi , test.dtm.unigrams[,training.dtm.unigrams.mi.order[1:num.features]])
+    conf.mat <- table (predictions.mi ,test.labels)
+    return (sum(diag(conf.mat))/180)
+  } )
   
-  #second model ( with bigrams)
-  model <-train.mnb(training.dtm[, ], training.labels) #can plug in the best features
-  predictions <- predict.mnb(model, test.dtm[, ])
-  print(table (predictions,test.labels))
+  accuracies.unigrams.mat <- cbind (accuracies.unigrams.mi.models, c(2:307))
+  accuracies.unigrams.best.n <- accuracies.unigrams.mat[which.max(accuracies.unigrams.mat[,1]), 2]
+  print(accuracies.unigrams.mat)
+  print(accuracies.unigrams.best.n)
+  plot(accuracies.unigrams.mat[,2] ,accuracies.unigrams.mat[,1], xlab = "n", ylab = "accuracy", type = "l")
+  model.unigrams.mi <-train.mnb(training.dtm.unigrams[,training.dtm.unigrams.mi.order[1:accuracies.unigrams.best.n] ], training.labels) 
+  predictions.unigrams.mi <- predict.mnb(model.unigrams.mi , test.dtm.unigrams[,training.dtm.unigrams.mi.order[1:accuracies.unigrams.best.n]])
+  print(table (predictions.unigrams.mi ,test.labels))
+
   
-  ##print(training.dtm[,training.dtm.mi.order[1:319] ])
-  
-  #third model ( with feature selection according to mutual information)
+  #second model ( with feature selection according to mutual information)(both unigrams and bigrams)
   accuracies.mi.models <- sapply(c(2:319), function (num.features){
-    model.mi <-train.mnb(training.dtm[,training.dtm.mi.order[1:num.features] ], training.labels) #can plug in the best features
+    model.mi <-train.mnb(training.dtm[,training.dtm.mi.order[1:num.features] ], training.labels) 
     predictions.mi <- predict.mnb(model.mi , test.dtm[,training.dtm.mi.order[1:num.features]])
     conf.mat <- table (predictions.mi ,test.labels)
     return (sum(diag(conf.mat))/180)
@@ -72,7 +84,7 @@ naive.bayes.function <- function (training.corpus.dec, training.corpus.true, tes
   print(accuracies.mat)
   print(accuracies.best)
   plot(accuracies.mat[,2] ,accuracies.mat[,1], xlab = "n", ylab = "accuracy", type = "l")
-  model.mi <-train.mnb(training.dtm[,training.dtm.mi.order[1:accuracies.best] ], training.labels) #can plug in the best features
+  model.mi <-train.mnb(training.dtm[,training.dtm.mi.order[1:accuracies.best] ], training.labels) 
   predictions.mi <- predict.mnb(model.mi , test.dtm[,training.dtm.mi.order[1:accuracies.best]])
   print(table (predictions.mi ,test.labels))
 }

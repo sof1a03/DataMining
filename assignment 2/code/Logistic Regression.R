@@ -34,21 +34,26 @@ logistic.function <- function (training.corpus.dec, training.corpus.true, testin
   #test set with both unigrams and bigrams
   test.labels <- c(rep(0,80),rep(1,80))
   test.dtm <- cbind(test.dtm.unigrams, test.dtm.bigrams)
+  ####################################################################
   
   #first model (only unigrams)
   reviews.glmnet.unigrams <- cv.glmnet(training.dtm.unigrams,training.labels,
                               family="binomial",type.measure="class")
-  print(coef(reviews.glmnet.unigrams,s="lambda.1se"))
+  print(coef(reviews.glmnet.unigrams,s="lambda.min"))
+  print(reviews.glmnet.unigrams$lambda.min)
+  plot (reviews.glmnet.unigrams)
   reviews.logreg.pred.unigrams <- predict(reviews.glmnet.unigrams,
-                                 newx=test.dtm.unigrams,s="lambda.1se",type="class") #this code is wrong: what is labda.1se
+                                 newx=test.dtm.unigrams,s="lambda.min",type="class") 
   print(table(reviews.logreg.pred.unigrams,test.labels))
   
   #second model ( with bigrams)
   reviews.glmnet <- cv.glmnet(training.dtm,training.labels,
                                        family="binomial",type.measure="class")
-  print(coef(reviews.glmnet,s="lambda.1se"))
+  print(coef(reviews.glmnet,s="lambda.min"))
+  print(reviews.glmnet$lambda.min)
+  plot(reviews.glmnet)
   reviews.logreg.pred <- predict(reviews.glmnet,
-                                          newx=test.dtm,s="lambda.1se",type="class") #this code is wrong: what is labda.1se
+                                          newx=test.dtm,s="lambda.min",type="class") 
   print(table(reviews.logreg.pred.unigrams,test.labels))
 }
 
