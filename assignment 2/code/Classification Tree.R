@@ -3,7 +3,7 @@ library(entropy)
 library(SnowballC)
 library(rpart)
 library(rpart.plot)
-classification.function <- function (training.corpus.dec, training.corpus.true, testing.corpus.dec, testing.corpus.true){
+classification.tree <- function (training.corpus.dec, training.corpus.true, testing.corpus.dec, testing.corpus.true){
   #training set
   training.dtm <- cleaning.function(training.corpus.dec,training.corpus.true)
   
@@ -45,12 +45,11 @@ classification.function <- function (training.corpus.dec, training.corpus.true, 
                            cp=0,method="class", minbucket = 1, minsplit = 2 )
   
   # tree with lowest cv error
-  cp.unigrams <-  reviews.rpart.unigrams$cptable[which.min(reviews.rpart.unigrams$cptable[,"xerror"]),"CP"]
-  print(cp.unigrams)
+  opt.cp.unigrams <-  reviews.rpart.unigrams$cptable[which.min(reviews.rpart.unigrams$cptable[,"xerror"]),"CP"]
+  print(opt.cp.unigrams)
   plotcp(reviews.rpart.unigrams)
-  print(reviews.rpart.unigrams$cptable)
+  printcp(reviews.rpart.unigrams)
   reviews.rpart.unigrams.pruned <- prune(reviews.rpart.unigrams,cp = reviews.rpart.unigrams$cptable[which.min(reviews.rpart.unigrams$cptable[,"xerror"]),"CP"] )
-  post(reviews.rpart.unigrams.pruned)
   rpart.plot(reviews.rpart.unigrams.pruned, roundint = FALSE)
   # make predictions on the test set
   reviews.rpart.unigrams.pred <- predict(reviews.rpart.unigrams.pruned,
@@ -63,10 +62,10 @@ classification.function <- function (training.corpus.dec, training.corpus.true, 
                     data=data.frame(training.dtm,label = training.labels),
                       cp=0,method="class", minbucket = 1, minsplit = 2)
   # tree with lowest cv error
-  cp <-  reviews.rpart$cptable[which.min(reviews.rpart$cptable[,"xerror"]),"CP"]
-  print(cp)
+  opt.cp <-  reviews.rpart$cptable[which.min(reviews.rpart$cptable[,"xerror"]),"CP"]
+  print(opt.cp)
   plotcp(reviews.rpart)
-  print(reviews.rpart$cptable)
+  printcp(reviews.rpart)
   reviews.rpart.pruned <- prune(reviews.rpart,cp = reviews.rpart$cptable[which.min(reviews.rpart$cptable[,"xerror"]),"CP"] )
   rpart.plot(reviews.rpart.unigrams.pruned, roundint = FALSE)
   # make predictions on the test set
