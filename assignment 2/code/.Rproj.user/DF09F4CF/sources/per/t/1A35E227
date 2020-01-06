@@ -1,0 +1,23 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1578327043475.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2933014445",
+    "id" : "1A35E227",
+    "lastKnownWriteTime" : 1578307813,
+    "last_content_update" : 1578307813,
+    "path" : "~/GitHub/DataMining/assignment 2/code/cleaning function.R",
+    "project_path" : "cleaning function.R",
+    "properties" : {
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
