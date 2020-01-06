@@ -1,4 +1,3 @@
-library(tm)
 library(randomForest)
 random.forest.function <- function (training.corpus.dec, training.corpus.true, testing.corpus.dec, testing.corpus.true){
   #training set
@@ -17,6 +16,7 @@ random.forest.function <- function (training.corpus.dec, training.corpus.true, t
   
   #training set with both unigrams and bigrams
   training.labels <- c(rep(0,320),rep(1,320))
+  training.labels <- as.factor(training.labels)
   training.dtm <- cbind(training.dtm.unigrams, training.dtm.bigrams)
   
   ###################################################################################
@@ -32,53 +32,57 @@ random.forest.function <- function (training.corpus.dec, training.corpus.true, t
   test.dtm.bigrams <- as.matrix(test.dtm.bigrams)
   #test set with both unigrams and bigrams
   test.labels <- c(rep(0,80),rep(1,80))
+  test.labels <- as.factor(test.labels)
   test.dtm <- cbind(test.dtm.unigrams, test.dtm.bigrams)
   #######################################################
   #with only unigrams
   training.dtm.unigrams <- as.data.frame(training.dtm.unigrams)
   test.dtm.unigrams <- as.data.frame(test.dtm.unigrams)
-  OOB.matrix <- tuneRF(x =training.dtm.unigrams,
+  OOB.matrix.unigrams <- tuneRF(x =training.dtm.unigrams,
                        y = training.labels,
-                       ntreeTry = 500, doBest = FALSE, plot = )
-  optimal.mtry <- OOB.matrix[which.min(OOB.matrix[,2]),1]
-  classifier <- randomForest(x = training.dtm[-318],
-                             y = training.dtm$label, ntree = 1000,
-                             mtry = optimal.mtry, type = "classification", err.rate = TRUE)
-  
-  error_rates <- classifier$err.rate[,1]
-  plot(classifier$err.rate[,1])
-  error_rates <- cbind(error_rates, c(1:1000))
-  optimal_ntree <- error_rates[which.min(error_rates[,1]), 2]
-  classifier <- randomForest(x = training.dtm[-318],
-                             y = training.dtm$label, mtry = optimal.mtry,
-                             ntree = optimal_ntree, type = "classification", err.rate = TRUE)
+                       ntreeTry = 500, doBest = FALSE, plot = TRUE)
+  print(OOB.matrix.unigrams)
+  optimal.mtry.unigrams <- OOB.matrix.unigrams[which.min(OOB.matrix.unigrams[,2]),1]
+  print(optimal.mtry.unigrams)
+  classifier.unigrams <- randomForest(x = training.dtm.unigrams,
+                             y = training.labels, ntree = 1000,
+                             mtry = optimal.mtry.unigrams, type = "classification", err.rate = TRUE)
+  err.rate.unigrams <- cbind( c(1:1000),classifier.unigrams$err.rate[,1])
+  optimal.ntree.unigrams <- err.rate.unigrams[which.min(err.rate.unigrams[,2]), 1]
+  print(optimal.ntree.unigrams)
+  colnames(err.rate.unigrams) <- c( "ntree","OOB error")
+  plot(err.rate.unigrams)
+  classifier.unigrams <- randomForest(x = training.dtm.unigrams,
+                             y = training.labels, mtry = optimal.mtry.unigrams,
+                             ntree = optimal.ntree.unigrams, type = "classification")
   # Predicting the Test set results
-  predictions <- predict(classifier, newdata = test.dtm)
-  table(predictions,test.labels)
+  predictions.unigrams <- predict(classifier.unigrams, newdata = test.dtm.unigrams)
+  print(table(predictions.unigrams,test.labels))
   ############################################################
+  #with both unigrams and bigrams
   training.dtm <- as.data.frame(training.dtm)
   test.dtm <- as.data.frame(test.dtm)
-  training.dtm$label <- training.labels
-  training.dtm$label <- factor(training.dtm$label, levels = c(0, 1))
-  OOB.matrix <- tuneRF(x = training.dtm[-318],
-                       y = training.dtm$label,
-                       ntreeTry = 500, doBest = FALSE)
+  OOB.matrix <- tuneRF(x =training.dtm,
+                                y = training.labels,
+                                ntreeTry = 500, doBest = FALSE, plot = TRUE)
+  print(OOB.matrix)
   optimal.mtry <- OOB.matrix[which.min(OOB.matrix[,2]),1]
-  classifier <- randomForest(x = training.dtm[-318],
-    y = training.dtm$label, ntree = 1000,
-    mtry = optimal.mtry, type = "classification", err.rate = TRUE)
+  print(optimal.mtry)
+  classifier <- randomForest(x = training.dtm,
+                                      y = training.labels, ntree = 1000,
+                                      mtry = optimal.mtry, type = "classification", err.rate = TRUE)
   
-  error_rates <- classifier$err.rate[,1]
-  plot(classifier$err.rate[,1])
-  error_rates <- cbind(error_rates, c(1:1000))
-  optimal_ntree <- error_rates[which.min(error_rates[,1]), 2]
-  classifier <- randomForest(x = training.dtm[-318],
-                           y = training.dtm$label, mtry = optimal.mtry,
-                            ntree = optimal_ntree, type = "classification", err.rate = TRUE)
-     
+  err.rate <- cbind(c(1:1000),classifier$err.rate[,1] )
+  optimal.ntree <- err.rate[which.min(err.rate[,2]), 1]
+  print(optimal.ntree)
+  colnames(err.rate) <- c( "ntree","OOB error")
+  plot(err.rate)
+  classifier <- randomForest(x = training.dtm,
+                                      y = training.labels, mtry = optimal.mtry,
+                                      ntree = optimal.ntree, type = "classification")
   # Predicting the Test set results
   predictions <- predict(classifier, newdata = test.dtm)
-  table(predictions,test.labels)
+  print(table(predictions,test.labels))
   
 }
 

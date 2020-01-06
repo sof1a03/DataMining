@@ -35,7 +35,6 @@ logistic.function <- function (training.corpus.dec, training.corpus.true, testin
   test.labels <- c(rep(0,80),rep(1,80))
   test.dtm <- cbind(test.dtm.unigrams, test.dtm.bigrams)
   ####################################################################
-  
   #first model (only unigrams)
   reviews.glmnet.unigrams <- cv.glmnet(training.dtm.unigrams,training.labels,
                               family="binomial",type.measure="class")

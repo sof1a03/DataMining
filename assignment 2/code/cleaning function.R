@@ -1,6 +1,5 @@
 #function used to clean the data
 library(tm)
-
 cleaning.function <- function(corpus.dec, corpus.true){
   reviews.dec <-VCorpus(DirSource(corpus.dec,encoding="UTF-8"))
   reviews.true<-VCorpus(DirSource(corpus.true,encoding="UTF-8"))
