@@ -67,6 +67,7 @@ naive.bayes.function <- function (training.corpus.dec, training.corpus.true, tes
   print(accuracies.unigrams.best.n)
   plot(accuracies.unigrams.mat[,2] ,accuracies.unigrams.mat[,1], xlab = "n", ylab = "accuracy", type = "l")
   model.unigrams.mi <-train.mnb(training.dtm.unigrams[,training.dtm.unigrams.mi.order[1:accuracies.unigrams.best.n] ], training.labels) 
+  print(model.unigrams.mi)
   naive.bayes.predictions.unigrams.mi <- predict.mnb(model.unigrams.mi , test.dtm.unigrams[,training.dtm.unigrams.mi.order[1:accuracies.unigrams.best.n]])
   print(table (naive.bayes.predictions.unigrams.mi ,test.labels))
 
@@ -85,6 +86,7 @@ naive.bayes.function <- function (training.corpus.dec, training.corpus.true, tes
   print(accuracies.best)
   plot(accuracies.mat[,2] ,accuracies.mat[,1], xlab = "n", ylab = "accuracy", type = "l")
   model.mi <-train.mnb(training.dtm[,training.dtm.mi.order[1:accuracies.best] ], training.labels) 
+  print(model.mi)
   naive.bayes.predictions.mi <- predict.mnb(model.mi , test.dtm[,training.dtm.mi.order[1:accuracies.best]])
   print(table (naive.bayes.predictions.mi ,test.labels))
 }
