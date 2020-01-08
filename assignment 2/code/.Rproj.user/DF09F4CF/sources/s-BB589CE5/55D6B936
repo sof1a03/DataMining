@@ -5,13 +5,15 @@
     "dirty" : false,
     "encoding" : "UTF-8",
     "folds" : "",
-    "hash" : "1646783859",
+    "hash" : "0",
     "id" : "55D6B936",
     "lastKnownWriteTime" : 1578256907,
     "last_content_update" : 1578256907,
     "path" : "~/GitHub/DataMining/assignment 2/code/Classification Tree.R",
     "project_path" : "Classification Tree.R",
     "properties" : {
+        "cursorPosition" : "59,23",
+        "scrollLine" : "30"
     },
     "read_only" : false,
     "read_only_alternatives" : [

@@ -5,13 +5,15 @@
     "dirty" : false,
     "encoding" : "UTF-8",
     "folds" : "",
-    "hash" : "4025710160",
+    "hash" : "0",
     "id" : "28332399",
-    "lastKnownWriteTime" : 1578311987,
-    "last_content_update" : 1578311987,
+    "lastKnownWriteTime" : 1578432762,
+    "last_content_update" : 1578432762878,
     "path" : "~/GitHub/DataMining/assignment 2/code/Random forests.R",
     "project_path" : "Random forests.R",
     "properties" : {
+        "cursorPosition" : "84,54",
+        "scrollLine" : "80"
     },
     "read_only" : false,
     "read_only_alternatives" : [

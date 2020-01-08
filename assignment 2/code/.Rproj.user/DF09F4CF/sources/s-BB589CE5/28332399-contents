@@ -2,7 +2,7 @@ library(randomForest)
 random.forest.function <- function (training.corpus.dec, training.corpus.true, testing.corpus.dec, testing.corpus.true){
   #training set
   training.dtm <- cleaning.function(training.corpus.dec,training.corpus.true)
-  
+
   #extraction of unigrams
   training.dtm.unigrams <- DocumentTermMatrix(training.dtm)
   training.dtm.unigrams <- removeSparseTerms(training.dtm.unigrams,0.95)
@@ -56,8 +56,8 @@ random.forest.function <- function (training.corpus.dec, training.corpus.true, t
                              y = training.labels, mtry = optimal.mtry.unigrams,
                              ntree = optimal.ntree.unigrams, type = "classification")
   # Predicting the Test set results
-  predictions.unigrams <- predict(classifier.unigrams, newdata = test.dtm.unigrams)
-  print(table(predictions.unigrams,test.labels))
+  random.forests.predictions.unigrams <- predict(classifier.unigrams, newdata = test.dtm.unigrams)
+  print(table(random.forests.predictions.unigrams,test.labels))
   ############################################################
   #with both unigrams and bigrams
   training.dtm <- as.data.frame(training.dtm)
@@ -81,8 +81,8 @@ random.forest.function <- function (training.corpus.dec, training.corpus.true, t
                                       y = training.labels, mtry = optimal.mtry,
                                       ntree = optimal.ntree, type = "classification")
   # Predicting the Test set results
-  predictions <- predict(classifier, newdata = test.dtm)
-  print(table(predictions,test.labels))
+  random.forests.predictions <- predict(classifier, newdata = test.dtm)
+  print(table(random.forests.predictions,test.labels))
   
 }
 

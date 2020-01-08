@@ -2,16 +2,18 @@
     "collab_server" : "",
     "contents" : "",
     "created" : 1578327103097.000,
-    "dirty" : false,
+    "dirty" : true,
     "encoding" : "UTF-8",
     "folds" : "",
-    "hash" : "1472030744",
+    "hash" : "0",
     "id" : "87B82FD9",
-    "lastKnownWriteTime" : 1578060323,
-    "last_content_update" : 1578060323,
+    "lastKnownWriteTime" : 1578433005,
+    "last_content_update" : 1578442340267,
     "path" : "~/GitHub/DataMining/assignment 2/code/Naive Bayes.R",
     "project_path" : "Naive Bayes.R",
     "properties" : {
+        "cursorPosition" : "90,56",
+        "scrollLine" : "79"
     },
     "read_only" : false,
     "read_only_alternatives" : [

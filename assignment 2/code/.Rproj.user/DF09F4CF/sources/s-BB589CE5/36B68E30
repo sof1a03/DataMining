@@ -5,13 +5,15 @@
     "dirty" : false,
     "encoding" : "UTF-8",
     "folds" : "",
-    "hash" : "3206303689",
+    "hash" : "0",
     "id" : "36B68E30",
     "lastKnownWriteTime" : 1578307867,
     "last_content_update" : 1578307867,
     "path" : "~/GitHub/DataMining/assignment 2/code/Logistic Regression.R",
     "project_path" : "Logistic Regression.R",
     "properties" : {
+        "cursorPosition" : "61,0",
+        "scrollLine" : "37"
     },
     "read_only" : false,
     "read_only_alternatives" : [
