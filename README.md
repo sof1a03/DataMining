@@ -10,7 +10,9 @@ The second assignment consists of building, performing hyperparameters-tuning an
 2. Regularized logistic regression (discriminative linear classiﬁer),
 3. Classiﬁcation trees, (ﬂexible classiﬁer) 
 4. Random forests (ﬂexible classiﬁer).
-For each of these, we firstly consider only unigrams, and then both unigrams and bigrams. The Assignment 2 folder contains the R code, the text of the assignment, the downloaded data, the reference papers (for more info about the task and benchmark results) and the (corrected) final report( and the images showed in the report).
+
+For each of these, we firstly consider only unigrams, and then both unigrams and bigrams.
+The Assignment 2 folder contains the R code, the text of the assignment, the downloaded data, the reference papers (for more info about the task and benchmark results) and the (corrected) final report( and the images showed in the report).
 
 # Pattern Recognition Assignment
 This assignment  consists of building, performing hyperparameters-tuning and evaluating in total 3 models to analyse a data set of handwritten digits and try to determine the digit that was written in the pixel image.
@@ -18,5 +20,6 @@ The models are:
 1. Regularized multinomial logit model (using the LASSO penalty)
 2. Support vector machines
 3. Feed-forward neural networks.
+
 The Pattern Recognition Assignment folder contains the R code, a rough documentation of the data set, the final report (and a corrected version), and the images showed in the final report. For more info about the assignment, refer to http://www.cs.uu.nl/docs/vakken/mpr/project.php.
 
