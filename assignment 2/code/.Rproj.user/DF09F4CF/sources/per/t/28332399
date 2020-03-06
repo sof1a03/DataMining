@@ -1,0 +1,25 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1578327108199.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3913487423",
+    "id" : "28332399",
+    "lastKnownWriteTime" : 1578432762,
+    "last_content_update" : 1578432762878,
+    "path" : "~/GitHub/DataMining/assignment 2/code/Random forests.R",
+    "project_path" : "Random forests.R",
+    "properties" : {
+        "cursorPosition" : "83,28",
+        "scrollLine" : "73"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 5,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
