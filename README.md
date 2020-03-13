@@ -5,7 +5,7 @@ This repository contains all the project in R at Utrecht University, academic ye
 The first assignment consists of developing some algorithms to build a classification tree, to perform bootstrap aggregation (bagging) with multiple classification trees, to build a random forest, and some algorithms to employ these models to make predictions. These algorithms are the used to analyse the Eclipse bug data set. The Assignment 1 folder contains the R code, the documented program code ( in .txt and .word format), the text of the assignment, the downloaded data, the reference paper (for more info about the task) and the final report.
 
 # Assignment 2
-The second assignment consists of building, performing hyperparameters-tuning and evaluating in total 8 models to analyse hotel reviews collected by Myle Ott and others and, focusing only on the negative reviews, try to discriminate between truthful and deceptive reviews. The models are:
+The second assignment consists of building, performing hyperparameters-tuning and evaluating in total 8 models to analyse hotel reviews collected by Myle Ott and others and, focusing only on the negative reviews, trying to discriminate between truthful and deceptive reviews. The models are:
 1.  Naive Bayes (generative linear classiﬁer),
 2. Regularized logistic regression (discriminative linear classiﬁer),
 3. Classiﬁcation trees, (ﬂexible classiﬁer) 
