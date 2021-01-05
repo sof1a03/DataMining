@@ -1,0 +1,34 @@
+
+> training.set <- read.csv(file = "C:/Users/ponti/Documents/GitHub/DataMiningUU/eclipse-metrics-packages-2.0.csv", sep = ";")
+> training.set <- training.set[, 3:44]
+> training.set.pre <- training.set[,1]
+> training.set.post <- training.set[,2]
+> training.set <- training.set[, 3:42]
+> training.set <- cbind(training.set.pre, training.set)
+> training.set.post <- sapply(training.set.post, function(elem){if (elem >= 1){return (1)} else {return (0)}})
+> test.set <- read.csv(file = "C:/Users/ponti/Documents/GitHub/DataMiningUU/eclipse-metrics-packages-3.0.csv", sep = ";")
+> test.set <- test.set[, 3:44]
+> test.set.pre = test.set[,1]
+> test.set.post <- test.set[,2]
+> test.set <- test.set[,3:42]
+> test.set <- cbind(test.set.pre, test.set)
+> test.set.post <- sapply(test.set.post, function(elem){if (elem >= 1){return (1)} else {return (0)}})
+> ex1.tree <- tree.grow(training.set,training.set.post,15,5,41  )
+> ex1.predictions <- tree.classify(test.set, ex1.tree)
+> ex1.accuracy <- utilities.accuracy(test.set.post, ex1.predictions)
+> ex1.precision <- utilities.precision(test.set.post, ex1.predictions)
+> ex1.recall <- utilities.recall(test.set.post, ex1.predictions)
+> ex1.tp <- true.positives(cbind(test.set.post,ex1.predictions))
+> ex1.fp <- false.positives(cbind(test.set.post,ex1.predictions))
+> ex1.tn <- true.negatives(cbind(test.set.post,ex1.predictions))
+> ex1.fn <- false.negatives(cbind(test.set.post,ex1.predictions))
+> ex2.bagging.trees <- tree.grow.bag(training.set,training.set.post,15,5,41,100  )
+> ex2.predictions <- tree.classify.bag(test.set, ex2.bagging.trees)
+> ex2.accuracy <- utilities.accuracy(test.set.post, ex2.predictions)
+> ex2.precision <- utilities.precision(test.set.post, ex2.predictions)
+> ex2.recall <- utilities.recall(test.set.post, ex2.predictions)
+> ex2.tp <- true.positives(cbind(test.set.post,ex2.predictions))
+> ex2.fp <- false.positives(cbind(test.set.post,ex2.predictions))
+> ex2.tn <- true.negatives(cbind(test.set.post,ex2.predictions))
+> ex2.fn <- false.negatives(cbind(test.set.post,ex2.predictions))
+> source('~/tree.R')
