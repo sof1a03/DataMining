@@ -24,11 +24,11 @@ naive.bayes.function <- function (training.corpus.dec, training.corpus.true, tes
   #test set
   test.dtm <- cleaning.function (testing.corpus.dec,testing.corpus.true)
   
-  #unigrams
+  #unigrams test set
   test.dtm.unigrams<- DocumentTermMatrix(test.dtm,list(dictionary=dimnames(training.dtm.unigrams)[[2]]))
   test.dtm.unigrams <- as.matrix(test.dtm.unigrams)
   
-  #bigrams
+  #bigrams test set
   test.dtm.bigrams<- DocumentTermMatrix(test.dtm,list(dictionary=dimnames(training.dtm.bigrams)[[2]]))
   test.dtm.bigrams <- as.matrix(test.dtm.bigrams)
   
